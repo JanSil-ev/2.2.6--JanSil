@@ -1,24 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export function useLocalStorage(key, initialValue) {
-  const [value, setValue] = useState(() => {
-    try {
-      const storedValue = localStorage.getItem(key);
-      return storedValue !== null ? JSON.parse(storedValue) : initialValue;
-    } catch (error) {
-      console.log("Error LocalStorage", error);
-      return initialValue;
-    }
-  });
+export function useLocalStorage(key: string, initialValue: any) {
+  const [value, setValue] = useState(initialValue);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.log("Error writting LocalStorage ", error);
-    }
-  }, [key, value]);
+  const setStoredValue = (newValue: any) => {
+    setValue(newValue);
+    localStorage.setItem(key, String(newValue));
+  };
 
-  return [value, setValue];
+  return [value, setStoredValue];
 }
-// не очень пока понял как сделать типизацию
